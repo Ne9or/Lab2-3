@@ -2,14 +2,13 @@
 #include <string>
 #include <typeinfo>
 #include <sstream>
-#include <vector>
-#include <algorithm>
 #include <cmath>
 #include "../include/ArraySequence.h"
 #include "../include/ListSequence.h"
 #include "../include/ImmutableArraySequence.h"
 #include "../include/ImmutableListSequence.h"
 #include "../include/custom_exceptions.h"
+#include "../include/Algorithm.h"
 
 using namespace std;
 
@@ -19,116 +18,18 @@ void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable);
 template <typename T>
 void printSequenceInfo(const Sequence<T>* sequence);
 
-vector<int> generateRange(int l, int h);
-vector<int> getPrimeFactors(int n);
-vector<int> filterNumbers(const vector<int>& numbers, const string& filterType, int target = 0);
-void printNumbers(const vector<int>& numbers);
-
-void AlgorithmMenu();
-void sequenceTypeMenu();
-void mainMenu();
-
-vector<int> generateRange(int l, int h) {
-    if (l > h) {
-        throw invalid_argument("Lower bound must be less than or equal to upper bound");
-    }
-    
-    vector<int> result;
-    for (int i = l; i <= h; ++i) {
-        result.push_back(i);
-    }
-    return result;
-}
-
-bool isPrime(int n) {
-    if (n <= 1) return false;
-    if (n == 2) return true;
-    if (n % 2 == 0) return false;
-    
-    for (int i = 3; i <= sqrt(n); i += 2) {
-        if (n % i == 0) return false;
-    }
-    return true;
-}
-
-vector<int> getPrimeFactors(int n) {
-    vector<int> factors;
-    
-    if (n <= 1) return factors;
-    
-    while (n % 2 == 0) {
-        factors.push_back(2);
-        n /= 2;
-    }
-    
-    for (int i = 3; i <= sqrt(n); i += 2) {
-        while (n % i == 0) {
-            factors.push_back(i);
-            n /= i;
-        }
-    }
-    
-    if (n > 2) {
-        factors.push_back(n);
-    }
-    
-    return factors;
-}
-
-vector<int> filterNumbers(const vector<int>& numbers, const string& filterType, int target) {
-    vector<int> result;
-    
-    if (filterType == "has_prime_factors") {
-        for (int num : numbers) {
-            vector<int> factors = getPrimeFactors(num);
-            if (!factors.empty()) {
-                result.push_back(num);
-            }
-        }
-    }
-    else if (filterType == "has_specific_factor" && target > 0) {
-        for (int num : numbers) {
-            vector<int> factors = getPrimeFactors(num);
-            if (find(factors.begin(), factors.end(), target) != factors.end()) {
-                result.push_back(num);
-            }
-        }
-    }
-    else if (filterType == "primes_only") {
-        for (int num : numbers) {
-            if (isPrime(num)) {
-                result.push_back(num);
-            }
-        }
-    }
-    
-    return result;
-}
-
-void printNumbers(const vector<int>& numbers) {
-    cout << "[";
-    for (size_t i = 0; i < numbers.size(); ++i) {
-        cout << numbers[i];
-        if (i != numbers.size() - 1) {
-            cout << ", ";
-        }
-    }
-    cout << "]" << endl;
-}
-
 void AlgorithmMenu() {
     int choice;
     int l, h, target;
-    vector<int> numbers;
-    vector<int> filtered;
+    Sequence<int> *seq = new ArraySequence<int>;
+    Sequence<int> *result = new ArraySequence<int>;
     
     do {
         cout << "\nAlgorithm Menu:\n";
         cout << "1. Generate range of numbers\n";
-        cout << "2. Show numbers with prime factors\n";
-        cout << "3. Show numbers containing specific prime factor\n";
-        cout << "4. Show prime numbers only\n";
-        cout << "5. View current numbers\n";
+        cout << "2. Show numbers containing specific prime factor\n";
+        cout << "3. Show prime numbers only\n";
+        cout << "4. View current numbers\n";
         cout << "0. Back to main menu\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -140,23 +41,14 @@ void AlgorithmMenu() {
                     cin >> l;
                     cout << "Enter upper bound: ";
                     cin >> h;
-                    numbers = generateRange(l, h);
+                    seq = Range(l, h);
                     cout << "Generated numbers: ";
-                    printNumbers(numbers);
+                    printNumbers(*seq);
                     break;
                     
                 case 2:
-                    if (numbers.empty()) {
-                        cout << "Please generate numbers first.\n";
-                        break;
-                    }
-                    filtered = filterNumbers(numbers, "has_prime_factors");
-                    cout << "Numbers with prime factors: ";
-                    printNumbers(filtered);
-                    break;
-                    
-                case 3:
-                    if (numbers.empty()) {
+                    cout <<  "webewa";
+                    if (!seq->get_size()) {
                         cout << "Please generate numbers first.\n";
                         break;
                     }
@@ -166,27 +58,30 @@ void AlgorithmMenu() {
                         cout << target << " is not a prime number.\n";
                         break;
                     }
-                    filtered = filterNumbers(numbers, "has_specific_factor", target);
+                    cout << "fhus";
+                    result = where(*seq, "specific_prime_factors", target);
                     cout << "Numbers containing prime factor " << target << ": ";
-                    printNumbers(filtered);
+                    printNumbers(*result);
                     break;
                     
-                case 4:
-                    if (numbers.empty()) {
+                case 3:
+                    cout << "vawbefaiow";
+                    if (!seq->get_size()) {
                         cout << "Please generate numbers first.\n";
                         break;
                     }
-                    filtered = filterNumbers(numbers, "primes_only");
+                    cout << "2";
+                    result = where(*seq, "prime_factors");
                     cout << "Prime numbers: ";
-                    printNumbers(filtered);
+                    printNumbers(*result);
                     break;
                     
-                case 5:
-                    if (numbers.empty()) {
+                case 4:
+                    if (!seq->get_size()) {
                         cout << "No numbers generated yet.\n";
                     } else {
                         cout << "Current numbers: ";
-                        printNumbers(numbers);
+                        printNumbers(*seq);
                     }
                     break;
                     
@@ -203,7 +98,6 @@ void AlgorithmMenu() {
     } while (choice != 0);
 }
 
-// Sequence Operations Menu
 template <typename T>
 void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable) {
     int choice;
@@ -232,7 +126,7 @@ void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable) {
                     cout << "Enter value to append: ";
                     cin >> value;
                     if (isImmutable) {
-                        sequence = dynamic_cast<ConstArraySequence<T>*>(sequence)->append(value);
+                        sequence = sequence->append(value);
                     } else {
                         sequence->append(value);
                     }
@@ -243,7 +137,7 @@ void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable) {
                     cout << "Enter value to prepend: ";
                     cin >> value;
                     if (isImmutable) {
-                        sequence = dynamic_cast<ConstArraySequence<T>*>(sequence)->prepend(value);
+                        sequence = sequence->prepend(value);
                     } else {
                         sequence->prepend(value);
                     }
@@ -256,7 +150,7 @@ void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable) {
                     cout << "Enter new value: ";
                     cin >> value;
                     if (isImmutable) {
-                        sequence = dynamic_cast<ConstArraySequence<T>*>(sequence)->set(index, value);
+                        sequence = sequence->set(index, value);
                     } else {
                         sequence->set(index, value);
                     }
@@ -327,7 +221,6 @@ void sequenceOperationsMenu(Sequence<T>* sequence, bool isImmutable) {
 template <typename T>
 void printSequenceInfo(const Sequence<T>* sequence) {
     cout << "\nSequence Information:\n";
-    cout << "Type: " << typeid(*sequence).name() << endl;
     cout << "Size: " << sequence->get_size() << endl;
     cout << "Contents: " << sequence->to_string() << endl;
 }

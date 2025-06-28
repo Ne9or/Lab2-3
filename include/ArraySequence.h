@@ -2,6 +2,7 @@
 #include <type_traits>
 #include <sstream>
 #include <iomanip>
+#include  <typeinfo>
 #include "DynamicArray.h"
 #include "Sequence.h"
 #include "custom_exceptions.h"
@@ -148,7 +149,7 @@ ArraySequence<T>* ArraySequence<T>::map(double multiplier) {
 
     for (int i = 0; i < items->get_size(); ++i) {
         T value = items->get(i);
-        if constexpr (std::is_same_v<T, std::string>) {
+        if (typeid(T) == typeid(std::string)) {
             for (char& c : value) {
                 c = std::toupper(static_cast<unsigned char>(c));
             }

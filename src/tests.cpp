@@ -130,21 +130,21 @@ void test_array_sequence() {
     cout << "ArraySequence tests passed!\n";
 }
 
-// void test_list_sequence() {
-//     ListSequence<int> seq;
-//     test_sequence_basic_operations(&seq);
+void test_list_sequence() {
+    ListSequence<int> seq;
+    test_sequence_basic_operations(&seq);
 
-//     int data[] = {1, 2, 3};
-//     ListSequence<int> seq2(data, 3);
-//     assert(seq2.get_size() == 3);
-//     assert(seq2.get(0) == 1);
+    int data[] = {1, 2, 3};
+    ListSequence<int> seq2(data, 3);
+    assert(seq2.get_size() == 3);
+    assert(seq2.get(0) == 1);
 
-//     ListSequence<int> seq3(seq2);
-//     assert(seq3.get_size() == 3);
-//     assert(seq3.get(0) == 1);
+    ListSequence<int> seq3(seq2);
+    assert(seq3.get_size() == 3);
+    assert(seq3.get(0) == 1);
 
-//     cout << "ListSequence tests passed!\n";
-// }
+    cout << "ListSequence tests passed!\n";
+}
 
 void test_immutable_array_sequence() {
 

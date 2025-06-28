@@ -1,21 +1,23 @@
 #pragma once
-#include <vector>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include "ArraySequence.h"
 
 using namespace std;
 
-vector<int> Range(int l, int h) {
+                                                                                     
+
+Sequence<int>* Range(int l, int h) {
+    Sequence<int>  *seq = new ArraySequence<int>();
     if (l > h) {
         throw invalid_argument("Lower bound must be less than or equal to upper bound");
     }
-    
-    vector<int> result;
+
     for (int i = l; i <= h; ++i) {
-        result.push_back(i);
+        seq->append(i);
     }
-    return result;
+    return seq;
 }
 
 bool isPrime(int n) {
@@ -29,58 +31,62 @@ bool isPrime(int n) {
     return true;
 }
 
-vector<int> primeFactors(int n) {
-    vector<int> factors;
+Sequence<int>* primeFactors(int n) {
+    Sequence<int> *factors  =  new ArraySequence<int>();
     
     if (n <= 1) return factors;
     
     while (n % 2 == 0) {
-        factors.push_back(2);
+        factors->append(2);
         n /= 2;
     }
     
     for (int i = 3; i <= sqrt(n); i += 2) {
         while (n % i == 0) {
-            factors.push_back(i);
+            factors->append(i);
             n /= i;
         }
     }
     
     if (n > 2) {
-        factors.push_back(n);
+        factors->append(n);
     }
     
     return factors;
 }
 
-vector<int> where(const vector<int>& numbers, const string& filterType, int target = 0) {
-    vector<int> result;
+Sequence<int>* where(const Sequence<int>& seq, const string& filterType, int target = 0) {
+    Sequence<int> *result = new ArraySequence<int>;
+
+    cout << "0";
     
     if (filterType == "prime_factors") {
-        for (int num : numbers) {
-            vector<int> factors = primeFactors(num);
-            if (!factors.empty()) {
-                result.push_back(num);
+        for (int i = 0; i < seq.get_size(); i ++){
+            Sequence<int>* factors = primeFactors(seq.get(i));
+            if (factors->get_size() == 1) {
+                result->append(seq.get(i));
             }
         }
     }
     else if (filterType == "specific_prime_factors" && target > 0) {
-        for (int num : numbers) {
-            vector<int> factors = primeFactors(num);
-            if (find(factors.begin(), factors.end(), target) != factors.end()) {
-                result.push_back(num);
+        for (int i = 0; i < seq.get_size(); i ++) {
+            Sequence<int>* factors = primeFactors(seq.get(i));
+            for (int g =  0; g < factors->get_size(); g++){
+                if (factors->get(g) == target){
+                    result->append(seq.get(i));
+                    break;
+                }
             }
         }
     }
-    
     return result;
 }
 
-void printNumbers(const vector<int>& numbers) {
+void printNumbers(const Sequence<int>& numbers) {
     cout << "[";
-    for (size_t i = 0; i < numbers.size(); ++i) {
-        cout << numbers[i];
-        if (i != numbers.size() - 1) {
+    for (size_t i = 0; i < numbers.get_size(); ++i) {
+        cout << numbers.get(i);
+        if (i != numbers.get_size() - 1) {
             cout << ", ";
         }
     }
